@@ -3,7 +3,7 @@
   "title": "React Native Snapkit",
   "version": "1.0.0",
   "description": "TODO",
-  "summary": "TODO",
+  "summary": "Use SnapKit in React Native",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

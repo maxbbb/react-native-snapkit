@@ -5,7 +5,7 @@ package = JSON.parse(File.read(File.join(__dir__, "package.json")))
 Pod::Spec.new do |s|
   s.name         = "react-native-snapkit"
   s.version      = package["version"]
-  s.summary      = package["Use SnapKit in React Native"]
+  s.summary      = package["summary"]
   s.description  = <<-DESC
                   react-native-snapkit
                    DESC
