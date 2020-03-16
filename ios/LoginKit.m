@@ -1,61 +1,100 @@
+#import "LoginKit.h"
 #import <SCSDKLoginKit/SCSDKLoginKit.h>
 
-// This might be the wrong way to pass in paraments, don't think first one gets a name
-RCT_EXPORT_METHOD(login: 
-    resolver:(RCTPromiseResolveBlock)resolve
-    rejecter:(RCTPromiseRejectBlock)reject
-)
+@implementation LoginKit
+
+- (dispatch_queue_t)methodQueue
 {
-    id completionBlock = ^(BOOL success, NSError *error) {
-        if (error) {
-            // return [RNFBFirestoreCommon promiseRejectFirestoreException:reject error:error];
-        } else {
-            resolve(nil);
-        }
-    };
-
-   ret = [SCSDKLoginClient loginFromViewController:viewController completion:completionBlock];
-
+  return dispatch_get_main_queue();
 }
 
-RCT_EXPORT_METHOD(clearToken)
+RCT_EXPORT_MODULE()
+
+RCT_REMAP_METHOD(login,
+                 loginResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [SCSDKLoginKit clearToken];
+    UIViewController *rootViewController = [UIApplication sharedApplication].delegate.window.rootViewController;
+    
+    [SCSDKLoginClient loginFromViewController:rootViewController
+                                   completion:^(BOOL success, NSError * _Nullable error)
+    {
+        if(error) {
+            resolve(@{
+                @"result": @(NO),
+                @"error": error.localizedDescription
+            });
+        } else {
+            resolve(@{@"result": @(YES)});
+        }
+    }];
 }
 
-RCT_EXPORT_METHOD(fetchUserData: 
- (NSString *) graphQLQuery
-    resolver:(RCTPromiseResolveBlock)resolve
-    rejecter:(RCTPromiseRejectBlock)reject
-)
+RCT_REMAP_METHOD(logout,
+                 logoutResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
 {
-// NSString *graphQLQuery = @"{me{bitmoji{selfie}}}";
+    [SCSDKLoginClient clearToken];
+}
 
-id successBlock = ^(NSDictionary *resources) {
-    // NSString *bitmojiSelfieUrl = resources[@"data"][@"me"][@"bitmoji"][@"selfie"];
-    return resources;
-};
+RCT_REMAP_METHOD(isUserLoggedIn,
+                 isUserLoggedInResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+    
+    resolve(@{@"result": @([SCSDKLoginClient isUserLoggedIn])});
+}
 
-id failureBlock = ^(NSError *error, BOOL isUserLoggedOut) {
-    if (error) {
-        if (isUserLoggedOut) {
-
-        } else {
-
+RCT_REMAP_METHOD(fetchUserData,
+                 fetchUserDataResolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+    if ([SCSDKLoginClient isUserLoggedIn]) {
+        NSString *graphQLQuery = @"{me{displayName, externalId, bitmoji{avatar}}}";
+        
+        NSDictionary *variables = @{@"page": @"bitmoji"};
+        
+        [SCSDKLoginClient fetchUserDataWithQuery:graphQLQuery
+                                       variables:variables
+                                         success:^(NSDictionary *resources)
+        {
+            NSDictionary *data = resources[@"data"];
+            NSDictionary *me = data[@"me"];
+            NSDictionary *bitmoji = me[@"bitmoji"];
+            NSString *bitmojiAvatarUrl = bitmoji[@"avatar"];
+            if (bitmojiAvatarUrl == (id)[NSNull null] || bitmojiAvatarUrl.length == 0 ) bitmojiAvatarUrl = @"(null)";
+            resolve(@{
+                @"displayName": me[@"displayName"],
+                @"externalId": me[@"externalId"],
+                @"avatar": bitmojiAvatarUrl
+            });
+            
         }
-        // return [RNFBFirestoreCommon promiseRejectFirestoreException:reject error:error];
+                                         failure:^(NSError * error, BOOL isUserLoggedOut)
+        {
+            reject(@"error", @"error", error);
+        }];
     } else {
-        resolve(nil);
+        resolve([NSNull null]);
     }
-};
-
-[SCSDKLoginClient fetchUserDataWithQuery
-    :graphQLQuery
-    variables: nil
-    success: successBlock
-    failure: failureBlock
-];
 }
 
+RCT_REMAP_METHOD(getAccessToken,
+                 resolver:(RCTPromiseResolveBlock)resolve
+                 rejecter:(RCTPromiseRejectBlock)reject)
+{
+    [SCSDKLoginClient refreshAccessTokenWithCompletion:^(NSString * _Nullable accessToken, NSError *_Nullable error) {
+        if (accessToken) {
+            resolve(@{
+                @"accessToken": accessToken
+            });
+        } else {
+            resolve(@{
+                @"accessToken": [NSNull null],
+                @"error": error
+            });
+        }
+    }];
+}
 
-
+@end
