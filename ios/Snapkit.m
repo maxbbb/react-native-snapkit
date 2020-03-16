@@ -1,7 +1,6 @@
-#import "SnapKit.h"
-#import <SCSDKLoginKit/SCSDKLoginKit.h>
+#import "Snapkit.h"
 
-@implementation SnapKit
+@implementation Snapkit
 
 RCT_EXPORT_MODULE()
 
