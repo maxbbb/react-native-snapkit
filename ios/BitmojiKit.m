@@ -1,5 +1,5 @@
 #import "BitmojiKit.h"
-#import <SCSDKBitmojiKit/SCSDKBitmojiKit.h>
+// #import <SCSDKBitmojiKit/SCSDKBitmojiKit.h>
 
 @implementation BitmojiKit
 

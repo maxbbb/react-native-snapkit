@@ -20,9 +20,8 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   s.dependency "React"
-  s.dependency "SnapSDK"
   # s.dependency "SnapSDK/SCSDKCreativeKit"
-  # s.dependency "SnapSDK/SCSDKLoginKit"
+  s.dependency "SnapSDK/SCSDKLoginKit"
   # s.dependency "SnapSDK/SCSDKBitmojiKit"
   # s.dependency "SnapSDK", :subspecs => ['SCSDKLoginKit', 'SCSDKCreativeKit', 'SCSDKBitmojiKit']
 
