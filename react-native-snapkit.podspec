@@ -18,12 +18,13 @@ Pod::Spec.new do |s|
 
   s.source_files = "ios/**/*.{h,m,swift}"
   s.requires_arc = true
+  s.use_frameworks = true
 
   s.dependency "React"
   # s.dependency "SnapSDK/SCSDKCreativeKit"
-  s.dependency "PINCache", '~> 2.3'
-  s.dependency "SnapSDK/SCSDKLoginKit"
-  s.dependency "SnapSDK/SCSDKBitmojiKit"
+  # s.dependency "PINCache", '2.3'
+  s.dependency "SnapSDK/SCSDKLoginKit", '1.4.0'
+  # s.dependency "SnapSDK/SCSDKBitmojiKit", '1.4.0'
   # s.dependency "SnapSDK", :subspecs => ['SCSDKLoginKit', 'SCSDKCreativeKit', 'SCSDKBitmojiKit']
 
 end
