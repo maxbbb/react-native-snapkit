@@ -1,14 +1,40 @@
-import { NativeModules, NativeEventEmitter } from "react-native";
+import PropTypes from "prop-types";
+import React from "react";
+import {
+  NativeModules,
+  NativeEventEmitter,
+  requireNativeComponent
+} from "react-native";
+
 const { LoginKit } = NativeModules;
 
-export const NativeLoginKit = NativeModules.SnapchatLogin;
-export const LoginKitEmitter = new NativeEventEmitter(NativeLoginKit);
+class BitmojiStickerPicker extends React.Component {
+  render() {
+    return <BitmojiStickerPickerNative {...this.props} />;
+  }
+}
+
+BitmojiStickerPicker.propTypes = {
+  /**
+   * A Boolean value that determines whether the user may use pinch
+   * gestures to zoom in and out of the map.
+   */
+  zoomEnabled: PropTypes.bool
+};
+
+const BitmojiStickerPickerNative = requireNativeComponent(
+  "BitmojiStickerPicker"
+);
+// export const NativeLoginKit = NativeModules.SnapchatLogin;
+// export const LoginKitEmitter = new NativeEventEmitter(NativeLoginKit);
 
 class RNLoginKit {
   static async login() {
     try {
+      console.log("Attempting to login");
       let result = await LoginKit.login();
       if (result.error) {
+        console.log(result.error, "error");
         throw new Error(result.error);
       }
       return await this.getUserInfo();
@@ -50,3 +76,4 @@ class RNBitmojiKit {}
 exports.LoginKit = RNLoginKit;
 exports.CreativeKit = RNCreativeKit;
 exports.BitmojiKit = RNBitmojiKit;
+exports.BitmojiStickerPicker = BitmojiStickerPicker;

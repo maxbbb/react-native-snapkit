@@ -50,7 +50,7 @@ RCT_REMAP_METHOD(fetchUserData,
                  rejecter:(RCTPromiseRejectBlock)reject)
 {
     if ([SCSDKLoginClient isUserLoggedIn]) {
-        NSString *graphQLQuery = @"{me{displayName, externalId, bitmoji{avatar}}}";
+        NSString *graphQLQuery = @"{me{displayName, externalId, bitmoji{selfie}}}";
         
         NSDictionary *variables = @{@"page": @"bitmoji"};
         
@@ -61,7 +61,7 @@ RCT_REMAP_METHOD(fetchUserData,
             NSDictionary *data = resources[@"data"];
             NSDictionary *me = data[@"me"];
             NSDictionary *bitmoji = me[@"bitmoji"];
-            NSString *bitmojiAvatarUrl = bitmoji[@"avatar"];
+            NSString *bitmojiAvatarUrl = bitmoji[@"selfie"];
             if (bitmojiAvatarUrl == (id)[NSNull null] || bitmojiAvatarUrl.length == 0 ) bitmojiAvatarUrl = @"(null)";
             resolve(@{
                 @"displayName": me[@"displayName"],
