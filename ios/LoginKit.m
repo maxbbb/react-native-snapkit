@@ -63,7 +63,20 @@ RCT_REMAP_METHOD(fetchUserData,
             NSDictionary *bitmoji = me[@"bitmoji"];
             NSString *bitmojiSelfieUrl = bitmoji[@"selfie"];
             NSString *bitmojiAvatarUrl = bitmoji[@"avatar"];
-            if (bitmojiAvatarUrl == (id)[NSNull null] || bitmojiAvatarUrl.length == 0 ) bitmojiAvatarUrl = @"(null)";
+            
+            if (bitmojiAvatarUrl == (id)[NSNull null] || bitmojiAvatarUrl.length == 0 ) bitmojiAvatarUrl = @"";
+            if (bitmojiSelfieUrl == (id)[NSNull null] || bitmojiSelfieUrl.length == 0 ) bitmojiSelfieUrl = @"";
+
+            // not all users have bitmoji selfie
+            if (bitmojiSelfieUrl == nil) {
+                bitmojiSelfieUrl = @"";
+            }
+            
+            // user can toggle off sharing bitmoji avatar
+            if (bitmojiAvatarUrl == nil) {
+                bitmojiAvatarUrl = @"";
+            }
+            
             resolve(@{
                 @"displayName": me[@"displayName"],
                 @"externalId": me[@"externalId"],
@@ -72,9 +85,9 @@ RCT_REMAP_METHOD(fetchUserData,
             });
             
         }
-                                         failure:^(NSError * error, BOOL isUserLoggedOut)
+        failure:^(NSError * error, BOOL isUserLoggedOut)
         {
-            reject(@"error", @"error", error);
+            reject(@"error", error.localizedDescription, error);
         }];
     } else {
         resolve([NSNull null]);
