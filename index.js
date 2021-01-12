@@ -3,7 +3,7 @@ import React from "react";
 import {
   NativeModules,
   NativeEventEmitter,
-  requireNativeComponent
+  requireNativeComponent,
 } from "react-native";
 
 const { LoginKit } = NativeModules;
@@ -19,7 +19,7 @@ BitmojiStickerPicker.propTypes = {
    * A Boolean value that determines whether the user may use pinch
    * gestures to zoom in and out of the map.
    */
-  zoomEnabled: PropTypes.bool
+  zoomEnabled: PropTypes.bool,
 };
 
 const BitmojiStickerPickerNative = requireNativeComponent(
@@ -50,6 +50,11 @@ class RNLoginKit {
 
   static async logout() {
     const { result } = await LoginKit.logout();
+    return result;
+  }
+
+  static async refreshAccessToken() {
+    const { result } = await LoginKit.getAccessToken();
     return result;
   }
 

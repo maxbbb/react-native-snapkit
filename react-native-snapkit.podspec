@@ -21,11 +21,6 @@ Pod::Spec.new do |s|
   # s.use_frameworks = true
 
   s.dependency "React"
-  # s.dependency "SnapSDK/SCSDKCreativeKit"
-  # s.dependency "PINCache", '2.3'
-  s.dependency "SnapSDK/SCSDKLoginKit", '1.4.0'
-  # s.dependency "SnapSDK/SCSDKBitmojiKit", '1.4.0'
-  # s.dependency "SnapSDK", :subspecs => ['SCSDKLoginKit', 'SCSDKCreativeKit', 'SCSDKBitmojiKit']
-
+  s.dependency "SnapSDK/SCSDKLoginKit", '1.6.9'
 end
 
