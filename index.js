@@ -6,7 +6,7 @@ import {
   requireNativeComponent,
 } from "react-native";
 
-const { LoginKit } = NativeModules;
+const { LoginKit, CreativeKit } = NativeModules;
 
 class BitmojiStickerPicker extends React.Component {
   render() {
@@ -74,7 +74,13 @@ class RNLoginKit {
   }
 }
 
-class RNCreativeKit {}
+class RNCreativeKit {
+  static async shareSticker(options) {
+    // options: stickerUrl, swipeUpUrl, caption
+    const { result } = await CreativeKit.shareSticker(options);
+    return result;
+  }
+}
 
 class RNBitmojiKit {}
 

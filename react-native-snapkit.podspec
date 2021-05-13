@@ -22,5 +22,7 @@ Pod::Spec.new do |s|
 
   s.dependency "React"
   s.dependency "SnapSDK/SCSDKLoginKit", '1.6.9'
+  s.dependency "SnapSDK/SCSDKCreativeKit", '1.6.9'
+
 end
 
